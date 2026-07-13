@@ -8,7 +8,6 @@ export const Footer: FC = () => {
   return (
     <footer className="w-full border-t border-neutral-200 bg-white">
       <div className="flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
-        {/* Left side: Logo & Brand */}
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <Image
@@ -24,7 +23,6 @@ export const Footer: FC = () => {
           </Link>
         </div>
 
-        {/* Right side: Social links & Navigation Links (Contact, About Project) */}
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-12">
           <ul className="flex items-center gap-4 text-neutral-400">
             <li>
