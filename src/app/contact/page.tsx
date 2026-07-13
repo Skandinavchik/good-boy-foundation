@@ -7,7 +7,7 @@ import { CONTACT_ITEMS } from '../constants'
 
 const ContactPage: FC = () => {
   return (
-    <div className="flex min-h-screen flex-col justify-between py-8 lg:py-12">
+    <div className="flex flex-1 flex-col justify-between py-8 lg:py-12">
       <main className="mx-auto w-full max-w-5xl flex-1">
         <BackButton />
 

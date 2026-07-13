@@ -4,7 +4,7 @@ import { Footer } from '@/components/layout/footer'
 
 const AboutPage: FC = () => {
   return (
-    <div className="flex min-h-screen flex-col justify-between py-8 lg:py-12">
+    <div className="flex flex-1 flex-col justify-between py-8 lg:py-12">
       <main className="mx-auto w-full max-w-4xl flex-1">
         <BackButton />
 

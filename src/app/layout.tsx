@@ -28,7 +28,7 @@ const RootLayout: FC<Readonly<RootLayoutProps>> = ({ children }) => {
       className={`${geistSans.className} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-white text-neutral-900">
-        <div className="container flex min-h-screen flex-1 flex-col">
+        <div className="container flex flex-1 flex-col">
           {children}
         </div>
       </body>

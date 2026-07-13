@@ -1,15 +1,14 @@
 import type { FC } from 'react'
+import { DonationForm } from '@/components/donation/donation-form'
 import { Footer } from '@/components/layout/footer'
 import { HomeSidebar } from '@/components/layout/home-sidebar'
 
 const HomePage: FC = () => {
   return (
-    <div className="flex min-h-screen flex-col justify-between gap-8 py-6 lg:flex-row lg:gap-16 lg:py-8">
+    <div className="flex flex-1 flex-col justify-between gap-8 py-6 lg:flex-row lg:gap-16 lg:py-8">
       <div className="flex flex-1 flex-col justify-between">
-        <main className="flex-1 py-4">
-          <div className="text-lg font-medium text-neutral-800">
-            Content
-          </div>
+        <main className="flex flex-1 flex-col py-4">
+          <DonationForm />
         </main>
         <Footer />
       </div>
