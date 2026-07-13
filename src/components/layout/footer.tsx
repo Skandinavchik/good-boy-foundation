@@ -28,7 +28,7 @@ export const Footer: FC = () => {
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-12">
           <ul className="flex items-center gap-4 text-neutral-400">
             <li>
-              <a
+              <Link
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -36,10 +36,10 @@ export const Footer: FC = () => {
                 className="transition-colors hover:text-neutral-600"
               >
                 <FontAwesomeIcon icon={faFacebook} className="h-5 w-5" />
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -47,7 +47,7 @@ export const Footer: FC = () => {
                 className="transition-colors hover:text-neutral-600"
               >
                 <FontAwesomeIcon icon={faInstagram} className="h-5 w-5" />
-              </a>
+              </Link>
             </li>
           </ul>
 
