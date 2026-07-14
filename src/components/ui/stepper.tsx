@@ -2,11 +2,7 @@
 
 import { useState, type FC, type ReactNode } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faCheck,
-  faArrowLeft,
-  faArrowRight,
-} from '@fortawesome/free-solid-svg-icons'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -29,32 +25,14 @@ export const Stepper: FC<StepperProps> = ({
   current,
   defaultStep = 0,
   onStepChange,
-  onBeforeNext,
   className,
 }) => {
   const [internalStep, setInternalStep] = useState<number>(defaultStep)
   const activeStep = current ?? internalStep
-  const isLastStep = activeStep === items.length - 1
 
   const handleStepChange = (nextStep: number) => {
     setInternalStep(nextStep)
     onStepChange?.(nextStep)
-  }
-
-  const handleNext = async () => {
-    if (onBeforeNext) {
-      const canAdvance = await onBeforeNext(activeStep)
-      if (!canAdvance) return
-    }
-    if (activeStep < items.length - 1) {
-      handleStepChange(activeStep + 1)
-    }
-  }
-
-  const handleBack = () => {
-    if (activeStep > 0) {
-      handleStepChange(activeStep - 1)
-    }
   }
 
   return (
@@ -121,7 +99,7 @@ export const Stepper: FC<StepperProps> = ({
                   {!isLast && (
                     <div
                       className={cn(
-                        'ml-3 mr-1 h-[1px] flex-1 sm:mx-4',
+                        'ml-3 mr-1 h-px flex-1 sm:mx-4',
                         isCompleted ? 'bg-indigo-600' : 'bg-neutral-200',
                       )}
                     />
@@ -135,31 +113,6 @@ export const Stepper: FC<StepperProps> = ({
         {items[activeStep]?.content && (
           <div className="mt-12">{items[activeStep].content}</div>
         )}
-      </div>
-
-      <div className="flex items-center justify-between pt-6">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={handleBack}
-          disabled={activeStep === 0}
-          className="inline-flex items-center gap-2 rounded-xl bg-neutral-100 px-6 py-5 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-40"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} className="h-3.5 w-3.5" />
-          <span>Back</span>
-        </Button>
-
-        <Button
-          type="button"
-          onClick={handleNext}
-          disabled={isLastStep}
-          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-40"
-        >
-          <span>{isLastStep ? 'Submit form' : 'Continue'}</span>
-          {!isLastStep && (
-            <FontAwesomeIcon icon={faArrowRight} className="h-3.5 w-3.5" />
-          )}
-        </Button>
       </div>
     </div>
   )
