@@ -34,7 +34,7 @@ export const useStepConfirmation = () => {
       ? parseFloat(rawValue.replace(/,/g, '.').trim())
       : rawValue
   const cleanVal = isNaN(numVal) ? 0 : numVal
-  const formattedAmount = `${cleanVal} €`
+  const formattedAmount = `${cleanVal.toFixed(2).replace(/\.00$/, '')} €`
 
   const fullName = `${
     firstName && firstName.trim() ? `${firstName.trim()} ` : ''

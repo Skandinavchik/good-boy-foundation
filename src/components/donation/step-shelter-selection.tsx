@@ -44,24 +44,29 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
         <Controller
           name="helpType"
           control={control}
-          render={({ field }) => (
-            <ToggleGroup
-              value={[field.value]}
-              onValueChange={(val: string[] | string) =>
-                onHelpTypeChange(val, field.onChange)
-              }
-              variant="outline"
-              className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6"
-            >
-              <ToggleGroupItem value="foundation" className="h-14 w-full">
-                Contribute to the whole foundation
-              </ToggleGroupItem>
+          render={({ field }) => {
+            const toggleItemClass =
+              'h-14 w-full font-semibold transition-all data-[state=on]:bg-indigo-600 data-[state=on]:text-white data-[state=on]:border-indigo-600 data-[state=on]:hover:bg-indigo-700 data-[state=on]:hover:text-white aria-pressed:bg-indigo-600 aria-pressed:text-white aria-pressed:border-indigo-600 aria-pressed:hover:bg-indigo-700 aria-pressed:hover:text-white data-[pressed]:bg-indigo-600 data-[pressed]:text-white data-[pressed]:border-indigo-600 data-[pressed]:hover:bg-indigo-700 data-[pressed]:hover:text-white'
 
-              <ToggleGroupItem value="shelter" className="h-14 w-full">
-                Contribute to a specific shelter
-              </ToggleGroupItem>
-            </ToggleGroup>
-          )}
+            return (
+              <ToggleGroup
+                value={[field.value]}
+                onValueChange={(val: string[] | string) =>
+                  onHelpTypeChange(val, field.onChange)
+                }
+                variant="outline"
+                className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6"
+              >
+                <ToggleGroupItem value="foundation" className={toggleItemClass}>
+                  Contribute to the whole foundation
+                </ToggleGroupItem>
+
+                <ToggleGroupItem value="shelter" className={toggleItemClass}>
+                  Contribute to a specific shelter
+                </ToggleGroupItem>
+              </ToggleGroup>
+            )
+          }}
         />
       </div>
 
