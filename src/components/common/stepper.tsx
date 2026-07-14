@@ -15,7 +15,7 @@ export type StepperProps = {
   items: StepItem[]
   current?: number
   defaultStep?: number
-  onStepChange?: (stepIndex: number) => void
+  onStepChange?: (stepIndex: number) => void | Promise<void>
   className?: string
 }
 
@@ -31,7 +31,7 @@ export const Stepper: FC<StepperProps> = ({
 
   const handleStepChange = (nextStep: number) => {
     setInternalStep(nextStep)
-    onStepChange?.(nextStep)
+    void onStepChange?.(nextStep)
   }
 
   return (

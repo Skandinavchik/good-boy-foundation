@@ -46,10 +46,10 @@ export const DonationForm: FC = () => {
   const {
     methods,
     currentStep,
-    setCurrentStep,
     isLastStep,
     handleNext,
     handleBack,
+    handleStepChange,
     onSubmit,
   } = useDonationForm(items.length)
 
@@ -62,7 +62,9 @@ export const DonationForm: FC = () => {
         <Stepper
           items={items}
           current={currentStep}
-          onStepChange={setCurrentStep}
+          onStepChange={step => {
+            void handleStepChange(step)
+          }}
         />
 
         <div className="flex items-center justify-between pt-6">
@@ -79,7 +81,13 @@ export const DonationForm: FC = () => {
 
           <Button
             type="button"
-            onClick={isLastStep ? methods.handleSubmit(onSubmit) : handleNext}
+            onClick={
+              isLastStep
+                ? methods.handleSubmit(onSubmit)
+                : () => {
+                  void handleNext()
+                }
+            }
             className="inline-flex h-12 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-40"
           >
             <span>{isLastStep ? 'Submit form' : 'Continue'}</span>

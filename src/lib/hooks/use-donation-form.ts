@@ -13,6 +13,8 @@ export const useDonationForm = (itemsLength: number) => {
 
   const methods = useForm<DonationFormData>({
     resolver: zodResolver(donationFormSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       helpType: 'foundation',
       shelterId: undefined,
@@ -32,7 +34,11 @@ export const useDonationForm = (itemsLength: number) => {
 
   const isLastStep = currentStep === itemsLength - 1
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (currentStep === 0) {
+      const isValid = await methods.trigger(['helpType', 'shelterId', 'value'])
+      if (!isValid) return
+    }
     if (currentStep < itemsLength - 1) {
       setCurrentStep(currentStep + 1)
     }
@@ -44,6 +50,20 @@ export const useDonationForm = (itemsLength: number) => {
     }
   }
 
+  const handleStepChange = async (targetStep: number) => {
+    if (targetStep > currentStep) {
+      if (currentStep === 0) {
+        const isValid = await methods.trigger([
+          'helpType',
+          'shelterId',
+          'value',
+        ])
+        if (!isValid) return
+      }
+    }
+    setCurrentStep(targetStep)
+  }
+
   return {
     methods,
     currentStep,
@@ -51,6 +71,7 @@ export const useDonationForm = (itemsLength: number) => {
     isLastStep,
     handleNext,
     handleBack,
+    handleStepChange,
     onSubmit,
   }
 }
