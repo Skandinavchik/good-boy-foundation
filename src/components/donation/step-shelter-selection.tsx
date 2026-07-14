@@ -71,7 +71,7 @@ export const StepShelterSelection: FC = () => {
           </label>
 
           <Controller
-            name="shelterId"
+            name="shelterID"
             control={control}
             render={({ field, fieldState }) => (
               <div className="space-y-1">
@@ -92,7 +92,7 @@ export const StepShelterSelection: FC = () => {
                 >
                   <SelectTrigger
                     className={cn(
-                      'h-14 w-full px-4 text-base',
+                      'w-full',
                       fieldState.error && 'border-red-500 focus:ring-red-500',
                     )}
                   >
@@ -138,11 +138,11 @@ export const StepShelterSelection: FC = () => {
                 >
                   <input
                     type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
+                    inputMode="decimal"
+                    pattern="[0-9.,]*"
                     placeholder="0"
                     value={
-                      field.value && field.value > 0
+                      field.value !== undefined && field.value !== null && field.value > 0
                         ? field.value.toString()
                         : ''
                     }

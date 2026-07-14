@@ -28,8 +28,8 @@ export const useStepShelterSelection = () => {
       onChange(selected)
       if (selected === 'foundation') {
         setValue('helpType', 'foundation')
-        setValue('shelterId', undefined)
-        clearErrors('shelterId')
+        setValue('shelterID', undefined)
+        clearErrors('shelterID')
       } else {
         setValue('helpType', 'shelter')
       }
@@ -53,8 +53,8 @@ export const useStepShelterSelection = () => {
     const parsed = val ? parseInt(val, 10) : undefined
     const cleanNum = parsed && !isNaN(parsed) ? parsed : undefined
     onChange(cleanNum)
-    setValue('shelterId', cleanNum, {
-      shouldValidate: Boolean(errors.shelterId) || cleanNum !== undefined,
+    setValue('shelterID', cleanNum, {
+      shouldValidate: Boolean(errors.shelterID) || cleanNum !== undefined,
     })
   }
 
@@ -64,7 +64,7 @@ export const useStepShelterSelection = () => {
   ) => {
     const selected = Array.isArray(val) ? val[0] : val
     if (selected) {
-      const parsed = parseInt(selected, 10)
+      const parsed = parseFloat(selected)
       if (!isNaN(parsed)) {
         onChange(parsed)
         setValue('value', parsed, {
@@ -78,11 +78,12 @@ export const useStepShelterSelection = () => {
     rawValue: string,
     onChange: (val: number) => void,
   ) => {
-    const cleaned = rawValue.replace(/\D/g, '')
-    const parsed = cleaned ? parseInt(cleaned, 10) : 0
-    onChange(parsed)
-    setValue('value', parsed, {
-      shouldValidate: Boolean(errors.value) || parsed > 0,
+    const cleaned = rawValue.replace(/,/g, '.').replace(/[^0-9.]/g, '')
+    const parsed = cleaned ? parseFloat(cleaned) : 0
+    const cleanNum = isNaN(parsed) ? 0 : parsed
+    onChange(cleanNum)
+    setValue('value', cleanNum, {
+      shouldValidate: Boolean(errors.value) || cleanNum > 0,
     })
   }
 

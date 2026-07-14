@@ -1,5 +1,4 @@
 import type { FC } from 'react'
-import Link from 'next/link'
 import { BackButton } from '@/components/common/back-button'
 import { Footer } from '@/components/layout/footer'
 
@@ -16,7 +15,7 @@ const NotFound: FC = () => {
         </h1>
 
         <p className="mb-10 max-w-md text-base leading-7 text-neutral-600">
-          Sorry, we couldn't find the page you're looking for or it has been moved.
+          Sorry, we couldn&apos;t find the page you&apos;re looking for or it has been moved.
         </p>
 
         <div className="flex items-center justify-center gap-4">
