@@ -84,7 +84,7 @@ export const Stepper: FC<StepperProps> = ({
                     </span>
                     <span
                       className={cn(
-                        'text-sm transition-colors sm:inline',
+                        'hidden text-sm transition-colors sm:inline',
                         isActive
                           ? 'font-semibold text-neutral-900'
                           : isCompleted

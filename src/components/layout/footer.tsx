@@ -7,7 +7,7 @@ import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons'
 export const Footer: FC = () => {
   return (
     <footer className="w-full border-t border-neutral-200 bg-white">
-      <div className="flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
+      <div className="flex flex-row flex-wrap items-center justify-center gap-4 py-4 sm:justify-between sm:py-6">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <Image
@@ -23,7 +23,7 @@ export const Footer: FC = () => {
           </Link>
         </div>
 
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-12">
+        <div className="flex flex-row flex-wrap items-center justify-center gap-4 sm:gap-12">
           <ul className="flex items-center gap-4 text-neutral-400">
             <li>
               <Link
