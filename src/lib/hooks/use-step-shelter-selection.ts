@@ -9,7 +9,6 @@ export const useStepShelterSelection = () => {
     control,
     setValue,
     clearErrors,
-    formState: { errors },
   } = useFormContext<DonationFormData>()
   const helpType = useWatch({ control, name: 'helpType' })
 
@@ -53,9 +52,6 @@ export const useStepShelterSelection = () => {
     const parsed = val ? parseInt(val, 10) : undefined
     const cleanNum = parsed && !isNaN(parsed) ? parsed : undefined
     onChange(cleanNum)
-    setValue('shelterID', cleanNum, {
-      shouldValidate: Boolean(errors.shelterID) || cleanNum !== undefined,
-    })
   }
 
   const onPresetChange = (
@@ -67,9 +63,6 @@ export const useStepShelterSelection = () => {
       const parsed = parseFloat(selected)
       if (!isNaN(parsed)) {
         onChange(parsed)
-        setValue('value', parsed, {
-          shouldValidate: Boolean(errors.value) || parsed > 0,
-        })
       }
     }
   }
@@ -82,9 +75,6 @@ export const useStepShelterSelection = () => {
     const parsed = cleaned ? parseFloat(cleaned) : 0
     const cleanNum = isNaN(parsed) ? 0 : parsed
     onChange(cleanNum)
-    setValue('value', cleanNum, {
-      shouldValidate: Boolean(errors.value) || cleanNum > 0,
-    })
   }
 
   return {

@@ -12,7 +12,6 @@ export interface PhonePrefixOption {
 export const useStepPersonalDetails = () => {
   const {
     control,
-    setValue,
     formState: { errors },
   } = useFormContext<DonationFormData>()
 
@@ -28,9 +27,6 @@ export const useStepPersonalDetails = () => {
     onChange: (val: string) => void,
   ) => {
     onChange(val)
-    setValue('firstName', val, {
-      shouldValidate: Boolean(errors.firstName) || val.trim().length >= 2,
-    })
   }
 
   const onLastNameChange = (
@@ -38,9 +34,6 @@ export const useStepPersonalDetails = () => {
     onChange: (val: string) => void,
   ) => {
     onChange(val)
-    setValue('lastName', val, {
-      shouldValidate: Boolean(errors.lastName) || val.trim().length >= 2,
-    })
   }
 
   const onEmailChange = (
@@ -48,9 +41,6 @@ export const useStepPersonalDetails = () => {
     onChange: (val: string) => void,
   ) => {
     onChange(val)
-    setValue('email', val, {
-      shouldValidate: Boolean(errors.email) || val.includes('@'),
-    })
   }
 
   const onPhonePrefixChange = (
@@ -59,9 +49,6 @@ export const useStepPersonalDetails = () => {
   ) => {
     if (val === '+421' || val === '+420') {
       onChange(val)
-      setValue('phonePrefix', val, {
-        shouldValidate: true,
-      })
     }
   }
 
@@ -71,9 +58,6 @@ export const useStepPersonalDetails = () => {
   ) => {
     const cleaned = rawValue.replace(/[^0-9\s]/g, '')
     onChange(cleaned)
-    setValue('phoneNumber', cleaned, {
-      shouldValidate: Boolean(errors.phoneNumber) || cleaned.replace(/\s/g, '').length >= 9,
-    })
   }
 
   return {

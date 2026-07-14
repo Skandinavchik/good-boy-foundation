@@ -10,41 +10,41 @@ import { StepShelterSelection } from './step-shelter-selection'
 import { StepPersonalDetails } from './step-personal-details'
 import { useDonationForm } from '@/lib/hooks/use-donation-form'
 
-const items: StepItem[] = [
-  {
-    title: 'Choose shelter',
-    content: <StepShelterSelection />,
-  },
-  {
-    title: 'Personal details',
-    content: <StepPersonalDetails />,
-  },
-
-  {
-    title: 'Confirmation',
-    content: (
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-          Confirmation
-        </h1>
-        <p className="text-base text-neutral-600">
-          Placeholder for donation summary and confirmation.
-        </p>
-      </div>
-    ),
-  },
-]
-
 export const DonationForm: FC = () => {
   const {
     methods,
     currentStep,
     isLastStep,
+    attemptedSteps,
     handleNext,
     handleBack,
     handleStepChange,
     onSubmit,
-  } = useDonationForm(items.length)
+  } = useDonationForm(3)
+
+  const items: StepItem[] = [
+    {
+      title: 'Choose shelter',
+      content: <StepShelterSelection stepAttempted={Boolean(attemptedSteps[0])} />,
+    },
+    {
+      title: 'Personal details',
+      content: <StepPersonalDetails stepAttempted={Boolean(attemptedSteps[1])} />,
+    },
+    {
+      title: 'Confirmation',
+      content: (
+        <div className="space-y-4">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+            Confirmation
+          </h1>
+          <p className="text-base text-neutral-600">
+            Placeholder for donation summary and confirmation.
+          </p>
+        </div>
+      ),
+    },
+  ]
 
   return (
     <FormProvider {...methods}>

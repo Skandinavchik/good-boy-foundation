@@ -14,7 +14,13 @@ import {
 } from '@/components/ui/select'
 import { useStepPersonalDetails } from '@/lib/hooks/use-step-personal-details'
 
-export const StepPersonalDetails: FC = () => {
+export interface StepPersonalDetailsProps {
+  stepAttempted?: boolean
+}
+
+export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
+  stepAttempted = false,
+}) => {
   const {
     control,
     prefixOptions,
@@ -47,24 +53,32 @@ export const StepPersonalDetails: FC = () => {
             <Controller
               name="firstName"
               control={control}
-              render={({ field, fieldState }) => (
-                <div className="space-y-1.5">
-                  <Input
-                    value={field.value || ''}
-                    onChange={e =>
-                      onFirstNameChange(e.target.value, field.onChange)
-                    }
-                    placeholder="Enter your first name"
-                    aria-invalid={Boolean(fieldState.error)}
-                    className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
-                  />
-                  {fieldState.error && (
-                    <p className="text-sm font-medium text-red-500">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
-              )}
+              render={({ field, fieldState, formState }) => {
+                const showError =
+                  Boolean(fieldState.error) &&
+                  (fieldState.isTouched ||
+                    fieldState.isDirty ||
+                    stepAttempted ||
+                    formState.isSubmitted)
+                return (
+                  <div className="space-y-1.5">
+                    <Input
+                      value={field.value || ''}
+                      onChange={e =>
+                        onFirstNameChange(e.target.value, field.onChange)
+                      }
+                      placeholder="Enter your first name"
+                      aria-invalid={showError}
+                      className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
+                    />
+                    {showError && fieldState.error && (
+                      <p className="text-sm font-medium text-red-500">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )
+              }}
             />
           </div>
 
@@ -77,24 +91,32 @@ export const StepPersonalDetails: FC = () => {
             <Controller
               name="lastName"
               control={control}
-              render={({ field, fieldState }) => (
-                <div className="space-y-1.5">
-                  <Input
-                    value={field.value || ''}
-                    onChange={e =>
-                      onLastNameChange(e.target.value, field.onChange)
-                    }
-                    placeholder="Enter your last name"
-                    aria-invalid={Boolean(fieldState.error)}
-                    className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
-                  />
-                  {fieldState.error && (
-                    <p className="text-sm font-medium text-red-500">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
-              )}
+              render={({ field, fieldState, formState }) => {
+                const showError =
+                  Boolean(fieldState.error) &&
+                  (fieldState.isTouched ||
+                    fieldState.isDirty ||
+                    stepAttempted ||
+                    formState.isSubmitted)
+                return (
+                  <div className="space-y-1.5">
+                    <Input
+                      value={field.value || ''}
+                      onChange={e =>
+                        onLastNameChange(e.target.value, field.onChange)
+                      }
+                      placeholder="Enter your last name"
+                      aria-invalid={showError}
+                      className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
+                    />
+                    {showError && fieldState.error && (
+                      <p className="text-sm font-medium text-red-500">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )
+              }}
             />
           </div>
         </div>
@@ -108,25 +130,33 @@ export const StepPersonalDetails: FC = () => {
           <Controller
             name="email"
             control={control}
-            render={({ field, fieldState }) => (
-              <div className="space-y-1.5">
-                <Input
-                  value={field.value || ''}
-                  onChange={e =>
-                    onEmailChange(e.target.value, field.onChange)
-                  }
-                  type="email"
-                  placeholder="name@domain.com"
-                  aria-invalid={Boolean(fieldState.error)}
-                  className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
-                />
-                {fieldState.error && (
-                  <p className="text-sm font-medium text-red-500">
-                    {fieldState.error.message}
-                  </p>
-                )}
-              </div>
-            )}
+            render={({ field, fieldState, formState }) => {
+              const showError =
+                Boolean(fieldState.error) &&
+                (fieldState.isTouched ||
+                  fieldState.isDirty ||
+                  stepAttempted ||
+                  formState.isSubmitted)
+              return (
+                <div className="space-y-1.5">
+                  <Input
+                    value={field.value || ''}
+                    onChange={e =>
+                      onEmailChange(e.target.value, field.onChange)
+                    }
+                    type="email"
+                    placeholder="name@domain.com"
+                    aria-invalid={showError}
+                    className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
+                  />
+                  {showError && fieldState.error && (
+                    <p className="text-sm font-medium text-red-500">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )
+            }}
           />
         </div>
 
@@ -141,67 +171,83 @@ export const StepPersonalDetails: FC = () => {
             <Controller
               name="phonePrefix"
               control={control}
-              render={({ field, fieldState }) => (
-                <div className="space-y-1.5">
-                  <Select
-                    items={prefixOptions.map(opt => ({
-                      value: opt.value,
-                      label: opt.label,
-                    }))}
-                    value={field.value ?? '+421'}
-                    onValueChange={val =>
-                      onPhonePrefixChange(val, field.onChange)
-                    }
-                  >
-                    <SelectTrigger
-                      aria-invalid={Boolean(fieldState.error)}
-                      className="w-full focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
+              render={({ field, fieldState, formState }) => {
+                const showError =
+                  Boolean(fieldState.error) &&
+                  (fieldState.isTouched ||
+                    fieldState.isDirty ||
+                    stepAttempted ||
+                    formState.isSubmitted)
+                return (
+                  <div className="space-y-1.5">
+                    <Select
+                      items={prefixOptions.map(opt => ({
+                        value: opt.value,
+                        label: opt.label,
+                      }))}
+                      value={field.value ?? '+421'}
+                      onValueChange={val =>
+                        onPhonePrefixChange(val, field.onChange)
+                      }
                     >
-                      <SelectValue placeholder="Prefix" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {prefixOptions.map(opt => (
-                          <SelectItem key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  {fieldState.error && (
-                    <p className="text-sm font-medium text-red-500">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
-              )}
+                      <SelectTrigger
+                        aria-invalid={showError}
+                        className="w-full focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
+                      >
+                        <SelectValue placeholder="Prefix" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {prefixOptions.map(opt => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {showError && fieldState.error && (
+                      <p className="text-sm font-medium text-red-500">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )
+              }}
             />
 
             {/* Phone Number Digits Input */}
             <Controller
               name="phoneNumber"
               control={control}
-              render={({ field, fieldState }) => (
-                <div className="space-y-1.5">
-                  <Input
-                    value={field.value || ''}
-                    onChange={e =>
-                      onPhoneNumberChange(e.target.value, field.onChange)
-                    }
-                    type="tel"
-                    inputMode="numeric"
-                    placeholder="123 321 123"
-                    aria-invalid={Boolean(fieldState.error)}
-                    className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
-                  />
-                  {fieldState.error && (
-                    <p className="text-sm font-medium text-red-500">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
-              )}
+              render={({ field, fieldState, formState }) => {
+                const showError =
+                  Boolean(fieldState.error) &&
+                  (fieldState.isTouched ||
+                    fieldState.isDirty ||
+                    stepAttempted ||
+                    formState.isSubmitted)
+                return (
+                  <div className="space-y-1.5">
+                    <Input
+                      value={field.value || ''}
+                      onChange={e =>
+                        onPhoneNumberChange(e.target.value, field.onChange)
+                      }
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="123 321 123"
+                      aria-invalid={showError}
+                      className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
+                    />
+                    {showError && fieldState.error && (
+                      <p className="text-sm font-medium text-red-500">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )
+              }}
             />
           </div>
         </div>

@@ -11,10 +11,11 @@ import {
 
 export const useDonationForm = (itemsLength: number) => {
   const [currentStep, setCurrentStep] = useState<number>(0)
+  const [attemptedSteps, setAttemptedSteps] = useState<Record<number, boolean>>({})
 
   const methods = useForm<DonationFormData>({
     resolver: zodResolver(donationFormSchema),
-    mode: 'onSubmit',
+    mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
       helpType: 'foundation',
@@ -36,18 +37,22 @@ export const useDonationForm = (itemsLength: number) => {
 
   const isLastStep = currentStep === itemsLength - 1
 
+  const step1Fields: (keyof DonationFormData)[] = ['helpType', 'shelterID', 'value']
+  const step2Fields: (keyof DonationFormData)[] = [
+    'firstName',
+    'lastName',
+    'email',
+    'phonePrefix',
+    'phoneNumber',
+  ]
+
   const handleNext = async () => {
+    setAttemptedSteps(prev => ({ ...prev, [currentStep]: true }))
     if (currentStep === 0) {
-      const isValid = await methods.trigger(['helpType', 'shelterID', 'value'])
+      const isValid = await methods.trigger(step1Fields)
       if (!isValid) return
     } else if (currentStep === 1) {
-      const isValid = await methods.trigger([
-        'firstName',
-        'lastName',
-        'email',
-        'phonePrefix',
-        'phoneNumber',
-      ])
+      const isValid = await methods.trigger(step2Fields)
       if (!isValid) return
     }
     if (currentStep < itemsLength - 1) {
@@ -64,21 +69,13 @@ export const useDonationForm = (itemsLength: number) => {
   const handleStepChange = async (targetStep: number) => {
     if (targetStep > currentStep) {
       if (currentStep === 0) {
-        const isValid = await methods.trigger([
-          'helpType',
-          'shelterID',
-          'value',
-        ])
+        setAttemptedSteps(prev => ({ ...prev, 0: true }))
+        const isValid = await methods.trigger(step1Fields)
         if (!isValid) return
       }
       if (currentStep <= 1 && targetStep > 1) {
-        const isValidStep1 = await methods.trigger([
-          'firstName',
-          'lastName',
-          'email',
-          'phonePrefix',
-          'phoneNumber',
-        ])
+        setAttemptedSteps(prev => ({ ...prev, 0: true, 1: true }))
+        const isValidStep1 = await methods.trigger(step2Fields)
         if (!isValidStep1) return
       }
     }
@@ -90,6 +87,7 @@ export const useDonationForm = (itemsLength: number) => {
     currentStep,
     setCurrentStep,
     isLastStep,
+    attemptedSteps,
     handleNext,
     handleBack,
     handleStepChange,
