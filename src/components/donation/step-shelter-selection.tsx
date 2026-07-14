@@ -163,7 +163,7 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                       pattern="[0-9.,]*"
                       placeholder="0"
                       value={
-                        field.value !== undefined && field.value !== null && field.value > 0
+                        field.value !== undefined && field.value !== null
                           ? field.value.toString()
                           : ''
                       }

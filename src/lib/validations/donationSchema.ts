@@ -5,9 +5,32 @@ export const donationFormSchema = z
     helpType: z.enum(['foundation', 'shelter']),
     shelterID: z.number().optional(),
     value: z
-      .number()
-      .positive('Donation amount must be greater than 0')
-      .min(0.01, 'Donation amount must be at least 0.01 €'),
+      .union([z.number(), z.string()])
+      .superRefine((val, ctx) => {
+        const strVal =
+          typeof val === 'string'
+            ? val.replace(/,/g, '.').trim()
+            : val.toString()
+        const parts = strVal.split('.')
+        if (parts.length === 2 && parts[1].length > 2) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Donation amount can have at most 2 decimal places',
+          })
+          return
+        }
+
+        const num =
+          typeof val === 'string'
+            ? parseFloat(val.replace(/,/g, '.').trim())
+            : val
+        if (isNaN(num) || num < 0.01) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Donation amount must be at least 0.01 €',
+          })
+        }
+      }),
     firstName: z
       .string()
       .min(2, 'First name must be between 2 and 20 characters')
@@ -52,16 +75,25 @@ export interface ApiDonationPayload {
 }
 
 export const toApiPayload = (data: DonationFormData): ApiDonationPayload => {
+  const rawVal =
+    typeof data.value === 'string'
+      ? parseFloat(data.value.replace(/,/g, '.').trim())
+      : data.value
+  const cleanVal = isNaN(rawVal) ? 0 : Math.round(rawVal * 100) / 100
+
   return {
     contributors: [
       {
-        firstName: data.firstName && data.firstName.trim().length > 0 ? data.firstName.trim() : undefined,
+        firstName:
+          data.firstName && data.firstName.trim().length > 0
+            ? data.firstName.trim()
+            : undefined,
         lastName: data.lastName.trim(),
         email: data.email.trim(),
         phone: `${data.phonePrefix} ${data.phoneNumber.trim()}`.trim(),
       },
     ],
     shelterID: data.helpType === 'shelter' ? data.shelterID : undefined,
-    value: data.value,
+    value: cleanVal,
   }
 }

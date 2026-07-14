@@ -69,12 +69,18 @@ export const useStepShelterSelection = () => {
 
   const onCustomInputChange = (
     rawValue: string,
-    onChange: (val: number) => void,
+    onChange: (val: string | number) => void,
   ) => {
-    const cleaned = rawValue.replace(/,/g, '.').replace(/[^0-9.]/g, '')
-    const parsed = cleaned ? parseFloat(cleaned) : 0
-    const cleanNum = isNaN(parsed) ? 0 : parsed
-    onChange(cleanNum)
+    let cleaned = rawValue.replace(/,/g, '.').replace(/[^0-9.]/g, '')
+    const parts = cleaned.split('.')
+    if (parts.length > 2) {
+      cleaned = parts[0] + '.' + parts.slice(1).join('')
+    }
+    const cleanParts = cleaned.split('.')
+    if (cleanParts.length === 2 && cleanParts[1].length > 2) {
+      cleaned = cleanParts[0] + '.' + cleanParts[1].slice(0, 2)
+    }
+    onChange(cleaned)
   }
 
   return {
