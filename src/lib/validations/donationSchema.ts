@@ -47,7 +47,9 @@ export const donationFormSchema = z
       .string()
       .min(9, 'Phone number must contain at least 9 digits')
       .regex(/^[0-9\s]+$/, 'Phone number must contain digits only'),
-    consentAgreed: z.boolean(),
+    consentAgreed: z.boolean().refine(val => val === true, {
+      message: 'You must agree with the processing of your personal data',
+    }),
   })
   .superRefine((data, ctx) => {
     if (data.helpType === 'shelter' && (!data.shelterID || data.shelterID <= 0)) {
@@ -62,7 +64,7 @@ export const donationFormSchema = z
 export type DonationFormData = z.infer<typeof donationFormSchema>
 
 export interface ApiContributor {
-  firstName?: string
+  firstName: string
   lastName: string
   email: string
   phone: string
@@ -84,16 +86,18 @@ export const toApiPayload = (data: DonationFormData): ApiDonationPayload => {
   return {
     contributors: [
       {
-        firstName:
-          data.firstName && data.firstName.trim().length > 0
-            ? data.firstName.trim()
-            : undefined,
+        firstName: data.firstName?.trim() || '',
         lastName: data.lastName.trim(),
         email: data.email.trim(),
         phone: `${data.phonePrefix} ${data.phoneNumber.trim()}`.trim(),
       },
     ],
-    shelterID: data.helpType === 'shelter' ? data.shelterID : undefined,
+    ...(data.helpType === 'shelter' &&
+    data.shelterID !== undefined &&
+    data.shelterID !== null &&
+    data.shelterID > 0
+      ? { shelterID: data.shelterID }
+      : {}),
     value: cleanVal,
   }
 }

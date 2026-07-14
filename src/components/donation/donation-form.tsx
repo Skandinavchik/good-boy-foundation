@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Stepper, type StepItem } from '@/components/common/stepper'
 import { StepShelterSelection } from './step-shelter-selection'
 import { StepPersonalDetails } from './step-personal-details'
+import { StepConfirmation } from './step-confirmation'
 import { useDonationForm } from '@/lib/hooks/use-donation-form'
 
 export const DonationForm: FC = () => {
@@ -33,16 +34,7 @@ export const DonationForm: FC = () => {
     },
     {
       title: 'Confirmation',
-      content: (
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            Confirmation
-          </h1>
-          <p className="text-base text-neutral-600">
-            Placeholder for donation summary and confirmation.
-          </p>
-        </div>
-      ),
+      content: <StepConfirmation stepAttempted={Boolean(attemptedSteps[2])} />,
     },
   ]
 
