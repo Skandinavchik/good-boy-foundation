@@ -71,7 +71,7 @@ export const DonationForm: FC = () => {
             variant="secondary"
             onClick={handleBack}
             disabled={currentStep === 0}
-            className="inline-flex items-center gap-2 rounded-xl bg-neutral-100 px-6 py-5 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-40"
+            className="inline-flex h-12 items-center gap-2 rounded-xl bg-neutral-100 px-6 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-40"
           >
             <FontAwesomeIcon icon={faArrowLeft} className="h-3.5 w-3.5" />
             <span>Back</span>
@@ -80,7 +80,7 @@ export const DonationForm: FC = () => {
           <Button
             type="button"
             onClick={isLastStep ? methods.handleSubmit(onSubmit) : handleNext}
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-40"
+            className="inline-flex h-12 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-40"
           >
             <span>{isLastStep ? 'Submit form' : 'Continue'}</span>
             {!isLastStep && (

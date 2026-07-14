@@ -16,7 +16,7 @@ export const useDonationForm = (itemsLength: number) => {
     defaultValues: {
       helpType: 'foundation',
       shelterId: undefined,
-      amount: 50,
+      value: 50,
       firstName: '',
       lastName: '',
       email: '',

@@ -16,7 +16,7 @@ export const useStepShelterSelection = () => {
 
   const onHelpTypeChange = (
     val: string[] | string,
-    onChange: (value: string) => void,
+    onChange: (val: string) => void,
   ) => {
     const selected = Array.isArray(val) ? val[0] : val
     if (selected) {
@@ -35,6 +35,27 @@ export const useStepShelterSelection = () => {
   }
 
   const shelterOptions = shelters.map(s => ({ value: s.id, label: s.name }))
+  const presetValues = [5, 10, 20, 30, 50, 100]
+
+  const onPresetChange = (
+    val: string[] | string,
+    onChange: (val: number) => void,
+  ) => {
+    const selected = Array.isArray(val) ? val[0] : val
+    if (selected) {
+      const parsed = parseInt(selected, 10)
+      if (!isNaN(parsed)) onChange(parsed)
+    }
+  }
+
+  const onCustomInputChange = (
+    rawValue: string,
+    onChange: (val: number) => void,
+  ) => {
+    const cleaned = rawValue.replace(/\D/g, '')
+    const parsed = cleaned ? parseInt(cleaned, 10) : 0
+    onChange(parsed)
+  }
 
   return {
     control,
@@ -43,7 +64,10 @@ export const useStepShelterSelection = () => {
     isError,
     shelters,
     shelterOptions,
+    presetValues,
     onHelpTypeChange,
     getSelectPlaceholder,
+    onPresetChange,
+    onCustomInputChange,
   }
 }

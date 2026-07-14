@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const donationFormSchema = z.object({
   helpType: z.enum(['foundation', 'shelter']),
   shelterId: z.number().optional(),
-  amount: z.number(),
+  value: z.number().int().min(1, 'Donation amount must be at least 1 €'),
   firstName: z.string().optional(),
   lastName: z.string(),
   email: z.string(),
