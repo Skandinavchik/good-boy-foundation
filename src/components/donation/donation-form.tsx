@@ -15,6 +15,7 @@ import {
   donationFormSchema,
   type DonationFormData,
 } from '@/lib/validations/donationSchema'
+import { StepShelterSelection } from './step-shelter-selection'
 
 export const DonationForm: FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0)
@@ -42,14 +43,7 @@ export const DonationForm: FC = () => {
     {
       title: 'Choose shelter',
       content: (
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            Choose how you want to help
-          </h1>
-          <p className="text-base text-neutral-600">
-            Placeholder for shelter selection and donation amount choices.
-          </p>
-        </div>
+        <StepShelterSelection />
       ),
     },
     {
