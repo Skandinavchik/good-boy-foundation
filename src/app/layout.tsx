@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import './globals.css'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { config } from '@fortawesome/fontawesome-svg-core'
+import { QueryProvider } from '@/components/providers/query-provider'
 import type { FC, ReactNode } from 'react'
 
 config.autoAddCss = false
@@ -28,9 +29,11 @@ const RootLayout: FC<Readonly<RootLayoutProps>> = ({ children }) => {
       className={`${geistSans.className} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-white text-neutral-900">
-        <div className="container flex flex-1 flex-col">
-          {children}
-        </div>
+        <QueryProvider>
+          <div className="container flex flex-1 flex-col">
+            {children}
+          </div>
+        </QueryProvider>
       </body>
     </html>
   )

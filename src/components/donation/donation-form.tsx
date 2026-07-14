@@ -51,7 +51,7 @@ export const DonationForm: FC = () => {
       content: (
         <div className="space-y-4">
           <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            We need a few details from you
+            Personal details
           </h1>
           <p className="text-base text-neutral-600">
             Placeholder for personal details form fields.
@@ -64,7 +64,7 @@ export const DonationForm: FC = () => {
       content: (
         <div className="space-y-4">
           <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            Check your details
+            Confirmation
           </h1>
           <p className="text-base text-neutral-600">
             Placeholder for donation summary and confirmation.
