@@ -1,9 +1,8 @@
 'use client'
 
 import type { FC } from 'react'
-import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import type { DonationFormData } from '@/lib/validations/donationSchema'
 import {
   Select,
   SelectContent,
@@ -11,18 +10,18 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select'
-import { useShelters } from '@/lib/hooks/use-shelters'
+} from '@/components/ui/select'
+import { useStepShelterSelection } from '@/lib/hooks/use-step-shelter-selection'
 
 export const StepShelterSelection: FC = () => {
-  const { control, setValue } = useFormContext<DonationFormData>()
-  const helpType = useWatch({ control, name: 'helpType' })
-
   const {
-    data: shelters = [],
+    control,
+    helpType,
     isPending,
-    isError,
-  } = useShelters(helpType === 'shelter')
+    shelters,
+    onHelpTypeChange,
+    getSelectPlaceholder,
+  } = useStepShelterSelection()
 
   return (
     <div className="space-y-8">
@@ -38,15 +37,9 @@ export const StepShelterSelection: FC = () => {
         render={({ field }) => (
           <ToggleGroup
             value={[field.value]}
-            onValueChange={(val: string[] | string) => {
-              const selected = Array.isArray(val) ? val[0] : val
-              if (selected) {
-                field.onChange(selected)
-                if (selected === 'foundation') {
-                  setValue('shelterId', undefined)
-                }
-              }
-            }}
+            onValueChange={(val: string[] | string) =>
+              onHelpTypeChange(val, field.onChange)
+            }
             variant="outline"
             className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2"
           >
@@ -83,17 +76,7 @@ export const StepShelterSelection: FC = () => {
                 disabled={helpType !== 'shelter' || isPending}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue
-                    placeholder={
-                      helpType !== 'shelter'
-                        ? 'Select shelter from the list'
-                        : isPending
-                          ? 'Loading shelters...'
-                          : isError
-                            ? 'Error loading shelters'
-                            : 'Select shelter from the list'
-                    }
-                  />
+                  <SelectValue placeholder={getSelectPlaceholder()} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>

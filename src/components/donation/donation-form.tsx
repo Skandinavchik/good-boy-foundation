@@ -1,92 +1,57 @@
 'use client'
 
-import { useState, type FC } from 'react'
-import {
-  useForm,
-  FormProvider,
-  type SubmitHandler,
-} from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import type { FC } from 'react'
+import { FormProvider } from 'react-hook-form'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/components/ui/button'
-import { Stepper, type StepItem } from '@/components/ui/stepper'
-import {
-  donationFormSchema,
-  type DonationFormData,
-} from '@/lib/validations/donationSchema'
+import { Stepper, type StepItem } from '@/components/common/stepper'
 import { StepShelterSelection } from './step-shelter-selection'
+import { useDonationForm } from '@/lib/hooks/use-donation-form'
+
+const items: StepItem[] = [
+  {
+    title: 'Choose shelter',
+    content: <StepShelterSelection />,
+  },
+  {
+    title: 'Personal details',
+    content: (
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+          Personal details
+        </h1>
+        <p className="text-base text-neutral-600">
+          Placeholder for personal details form fields.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: 'Confirmation',
+    content: (
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+          Confirmation
+        </h1>
+        <p className="text-base text-neutral-600">
+          Placeholder for donation summary and confirmation.
+        </p>
+      </div>
+    ),
+  },
+]
 
 export const DonationForm: FC = () => {
-  const [currentStep, setCurrentStep] = useState<number>(0)
-
-  const methods = useForm<DonationFormData>({
-    resolver: zodResolver(donationFormSchema),
-    defaultValues: {
-      helpType: 'foundation',
-      shelterId: undefined,
-      amount: 50,
-      firstName: '',
-      lastName: '',
-      email: '',
-      phonePrefix: '+421',
-      phoneNumber: '',
-      consentAgreed: false,
-    },
-  })
-
-  const onSubmit: SubmitHandler<DonationFormData> = data => {
-    console.log('Form submitted:', data)
-  }
-
-  const items: StepItem[] = [
-    {
-      title: 'Choose shelter',
-      content: (
-        <StepShelterSelection />
-      ),
-    },
-    {
-      title: 'Personal details',
-      content: (
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            Personal details
-          </h1>
-          <p className="text-base text-neutral-600">
-            Placeholder for personal details form fields.
-          </p>
-        </div>
-      ),
-    },
-    {
-      title: 'Confirmation',
-      content: (
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            Confirmation
-          </h1>
-          <p className="text-base text-neutral-600">
-            Placeholder for donation summary and confirmation.
-          </p>
-        </div>
-      ),
-    },
-  ]
-
-  const isLastStep = currentStep === items.length - 1
-
-  const handleNext = () => {
-    if (currentStep < items.length - 1) {
-      setCurrentStep(currentStep + 1)
-    }
-  }
-
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
-    }
-  }
+  const {
+    methods,
+    currentStep,
+    setCurrentStep,
+    isLastStep,
+    handleNext,
+    handleBack,
+    onSubmit,
+  } = useDonationForm(items.length)
 
   return (
     <FormProvider {...methods}>

@@ -16,7 +16,6 @@ export type StepperProps = {
   current?: number
   defaultStep?: number
   onStepChange?: (stepIndex: number) => void
-  onBeforeNext?: (currentStepIndex: number) => Promise<boolean> | boolean
   className?: string
 }
 
@@ -53,7 +52,7 @@ export const Stepper: FC<StepperProps> = ({
 
               return (
                 <li
-                  key={item.title || `step-${index}`}
+                  key={stepTitle || `step-${index}`}
                   className={cn(
                     'flex items-center',
                     isLast ? 'shrink-0' : 'flex-1',
