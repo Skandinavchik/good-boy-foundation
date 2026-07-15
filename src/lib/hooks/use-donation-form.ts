@@ -18,21 +18,22 @@ import {
 } from '@/lib/hooks/use-contribute'
 
 export const useDonationForm = (itemsLength: number) => {
-  const currentStep = useDonationStore(state => state.currentStep)
-  const attemptedSteps = useDonationStore(state => state.attemptedSteps)
-  const draftFormData = useDonationStore(state => state.draftFormData)
-  const isSubmittingStore = useDonationStore(state => state.isSubmitting)
-  const isSubmittedSuccess = useDonationStore(
-    state => state.isSubmittedSuccess,
-  )
-  const hasHydrated = useDonationStore(state => state.hasHydrated)
-  const setCurrentStep = useDonationStore(state => state.setCurrentStep)
-  const setAttemptedStep = useDonationStore(state => state.setAttemptedStep)
-  const updateDraftFormData = useDonationStore(
-    state => state.updateDraftFormData,
-  )
-  const setIsSubmitting = useDonationStore(state => state.setIsSubmitting)
-  const resetStore = useDonationStore(state => state.resetStore)
+  const {
+    currentStep,
+    attemptedSteps,
+    draftFormData,
+    isSubmitting: isSubmittingStore,
+    isSubmittedSuccess,
+    lastSubmittedDonation,
+    hasHydrated,
+    setCurrentStep,
+    setAttemptedStep,
+    updateDraftFormData,
+    setIsSubmitting,
+    setIsSubmittedSuccess,
+    setLastSubmittedDonation,
+    resetStore,
+  } = useDonationStore(state => state)
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -96,7 +97,9 @@ export const useDonationForm = (itemsLength: number) => {
         ? 'Thank you for your support! We have successfully received your donation details.'
         : rawSuccessMsg
 
-      resetForm()
+      const submittedData = methods.getValues()
+      setLastSubmittedDonation(submittedData as DonationFormData)
+      setIsSubmittedSuccess(true)
       setSuccessMessage(successMsg)
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -182,6 +185,7 @@ export const useDonationForm = (itemsLength: number) => {
     onSubmit,
     isSubmitting: combinedIsSubmitting,
     isSubmittedSuccess,
+    lastSubmittedDonation,
     resetStore,
     resetForm,
     errorMessage,

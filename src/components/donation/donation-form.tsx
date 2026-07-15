@@ -9,6 +9,7 @@ import { Stepper, type StepItem } from '@/components/common/stepper'
 import { StepShelterSelection } from './step-shelter-selection'
 import { StepPersonalDetails } from './step-personal-details'
 import { StepConfirmation } from './step-confirmation'
+import { StepSuccess } from './step-success'
 import { useDonationForm } from '@/lib/hooks/use-donation-form'
 
 export const DonationForm: FC = () => {
@@ -22,6 +23,9 @@ export const DonationForm: FC = () => {
     handleStepChange,
     onSubmit,
     isSubmitting,
+    isSubmittedSuccess,
+    lastSubmittedDonation,
+    resetForm,
     errorMessage,
     successMessage,
     setSuccessMessage,
@@ -42,11 +46,23 @@ export const DonationForm: FC = () => {
     },
   ]
 
+  if (isSubmittedSuccess) {
+    return (
+      <div className="animate-in fade-in zoom-in-95 duration-500 fill-mode-both">
+        <StepSuccess
+          onDonateAgain={resetForm}
+          successMessage={successMessage}
+          summary={lastSubmittedDonation}
+        />
+      </div>
+    )
+  }
+
   return (
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="flex flex-1 flex-col justify-between gap-12"
+        className="flex flex-1 flex-col justify-between gap-12 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
       >
         <div className="space-y-6">
           {successMessage && (

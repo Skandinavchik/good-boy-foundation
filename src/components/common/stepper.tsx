@@ -123,7 +123,12 @@ export const Stepper: FC<StepperProps> = ({
         </nav>
 
         {items[activeStep]?.content && (
-          <div className="mt-12">{items[activeStep].content}</div>
+          <div
+            key={activeStep}
+            className="mt-12 animate-in fade-in slide-in-from-bottom-3 duration-300 fill-mode-both"
+          >
+            {items[activeStep].content}
+          </div>
         )}
       </div>
     </div>

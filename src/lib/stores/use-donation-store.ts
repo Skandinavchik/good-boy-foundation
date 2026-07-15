@@ -11,6 +11,7 @@ export interface DonationStoreState {
   isSubmitting: boolean
   isSubmittedSuccess: boolean
   hasHydrated: boolean
+  lastSubmittedDonation: DonationFormData | null
 }
 
 export interface DonationStoreActions {
@@ -20,6 +21,7 @@ export interface DonationStoreActions {
   setIsSubmitting: (submitting: boolean) => void
   setIsSubmittedSuccess: (success: boolean) => void
   setHasHydrated: (hydrated: boolean) => void
+  setLastSubmittedDonation: (data: DonationFormData | null) => void
   resetStore: () => void
 }
 
@@ -44,6 +46,7 @@ const initialState: DonationStoreState = {
   isSubmitting: false,
   isSubmittedSuccess: false,
   hasHydrated: false,
+  lastSubmittedDonation: null,
 }
 
 export const useDonationStore = create<DonationStore>()(
@@ -66,6 +69,7 @@ export const useDonationStore = create<DonationStore>()(
       setIsSubmitting: submitting => set({ isSubmitting: submitting }),
       setIsSubmittedSuccess: success => set({ isSubmittedSuccess: success }),
       setHasHydrated: hydrated => set({ hasHydrated: hydrated }),
+      setLastSubmittedDonation: data => set({ lastSubmittedDonation: data }),
       resetStore: () =>
         set({
           currentStep: 0,
@@ -74,6 +78,7 @@ export const useDonationStore = create<DonationStore>()(
           isSubmitting: false,
           isSubmittedSuccess: false,
           hasHydrated: true,
+          lastSubmittedDonation: null,
         }),
     }),
     {
