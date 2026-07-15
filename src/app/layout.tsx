@@ -13,9 +13,44 @@ const geistSans = Geist({
 })
 
 export const metadata: Metadata = {
-  title: 'GoodBoy Foundation | Support Dog Shelters in Slovakia',
+  metadataBase: new URL('https://goodboyfoundation.sk'),
+  title: {
+    default: 'GoodBoy Foundation | Support Dog Shelters in Slovakia',
+    template: '%s | GoodBoy Foundation',
+  },
   description:
     'Help abandoned and shelter dogs across Slovakia. Support GoodBoy Foundation by donating to specific shelters or general foundation initiatives.',
+  keywords: [
+    'dog shelter Slovakia',
+    'donate dogs',
+    'GoodBoy Foundation',
+    'animal rescue Slovakia',
+    'charity dogs',
+    'support animal shelters',
+    'pomoc psom',
+    'útulky Slovensko',
+  ],
+  authors: [{ name: 'GoodBoy Foundation' }],
+  creator: 'GoodBoy Foundation',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://goodboyfoundation.sk',
+    title: 'GoodBoy Foundation | Support Dog Shelters in Slovakia',
+    description:
+      'Help abandoned and shelter dogs across Slovakia. Support GoodBoy Foundation by donating to specific shelters or general foundation initiatives.',
+    siteName: 'GoodBoy Foundation',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GoodBoy Foundation | Support Dog Shelters in Slovakia',
+    description:
+      'Help abandoned and shelter dogs across Slovakia. Support GoodBoy Foundation by donating to specific shelters or general foundation initiatives.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 type RootLayoutProps = {
