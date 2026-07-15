@@ -45,7 +45,7 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
           {/* First Name (Optional) */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-neutral-900">
+            <Label htmlFor="firstName" className="text-sm font-semibold text-neutral-900">
               First name{' '}
               <span className="font-normal text-neutral-400">(Optional)</span>
             </Label>
@@ -60,19 +60,22 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                     fieldState.isDirty ||
                     stepAttempted ||
                     formState.isSubmitted)
+                const errorId = 'firstName-error'
                 return (
                   <div className="space-y-1.5">
                     <Input
+                      id="firstName"
                       value={field.value || ''}
                       onChange={e =>
                         onFirstNameChange(e.target.value, field.onChange)
                       }
                       placeholder="Enter your first name"
                       aria-invalid={showError}
+                      aria-describedby={showError && fieldState.error ? errorId : undefined}
                       className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
                     />
                     {showError && fieldState.error && (
-                      <p className="text-sm font-medium text-red-500">
+                      <p id={errorId} className="text-sm font-medium text-red-500">
                         {fieldState.error.message}
                       </p>
                     )}
@@ -84,7 +87,7 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
 
           {/* Last Name (Required) */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-neutral-900">
+            <Label htmlFor="lastName" className="text-sm font-semibold text-neutral-900">
               Last name
             </Label>
 
@@ -98,19 +101,22 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                     fieldState.isDirty ||
                     stepAttempted ||
                     formState.isSubmitted)
+                const errorId = 'lastName-error'
                 return (
                   <div className="space-y-1.5">
                     <Input
+                      id="lastName"
                       value={field.value || ''}
                       onChange={e =>
                         onLastNameChange(e.target.value, field.onChange)
                       }
                       placeholder="Enter your last name"
                       aria-invalid={showError}
+                      aria-describedby={showError && fieldState.error ? errorId : undefined}
                       className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
                     />
                     {showError && fieldState.error && (
-                      <p className="text-sm font-medium text-red-500">
+                      <p id={errorId} className="text-sm font-medium text-red-500">
                         {fieldState.error.message}
                       </p>
                     )}
@@ -123,7 +129,7 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
 
         {/* E-mail Address */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-neutral-900">
+          <Label htmlFor="email" className="text-sm font-semibold text-neutral-900">
             E-mail
           </Label>
 
@@ -137,9 +143,11 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                   fieldState.isDirty ||
                   stepAttempted ||
                   formState.isSubmitted)
+              const errorId = 'email-error'
               return (
                 <div className="space-y-1.5">
                   <Input
+                    id="email"
                     value={field.value || ''}
                     onChange={e =>
                       onEmailChange(e.target.value, field.onChange)
@@ -147,10 +155,11 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                     type="email"
                     placeholder="name@domain.com"
                     aria-invalid={showError}
+                    aria-describedby={showError && fieldState.error ? errorId : undefined}
                     className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
                   />
                   {showError && fieldState.error && (
-                    <p className="text-sm font-medium text-red-500">
+                    <p id={errorId} className="text-sm font-medium text-red-500">
                       {fieldState.error.message}
                     </p>
                   )}
@@ -162,7 +171,7 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
 
         {/* Phone Number row */}
         <div className="space-y-2">
-          <Label className="text-sm font-semibold text-neutral-900">
+          <Label htmlFor="phoneNumber" className="text-sm font-semibold text-neutral-900">
             Phone number
           </Label>
 
@@ -178,6 +187,7 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                     fieldState.isDirty ||
                     stepAttempted ||
                     formState.isSubmitted)
+                const errorId = 'phonePrefix-error'
                 return (
                   <div className="space-y-1.5">
                     <Select
@@ -191,7 +201,10 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                       }
                     >
                       <SelectTrigger
+                        id="phonePrefix"
                         aria-invalid={showError}
+                        aria-label="Country prefix"
+                        aria-describedby={showError && fieldState.error ? errorId : undefined}
                         className="w-full focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
                       >
                         <SelectValue placeholder="Prefix" />
@@ -207,7 +220,7 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                       </SelectContent>
                     </Select>
                     {showError && fieldState.error && (
-                      <p className="text-sm font-medium text-red-500">
+                      <p id={errorId} className="text-sm font-medium text-red-500">
                         {fieldState.error.message}
                       </p>
                     )}
@@ -227,9 +240,11 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                     fieldState.isDirty ||
                     stepAttempted ||
                     formState.isSubmitted)
+                const errorId = 'phoneNumber-error'
                 return (
                   <div className="space-y-1.5">
                     <Input
+                      id="phoneNumber"
                       value={field.value || ''}
                       onChange={e =>
                         onPhoneNumberChange(e.target.value, field.onChange)
@@ -238,10 +253,11 @@ export const StepPersonalDetails: FC<StepPersonalDetailsProps> = ({
                       inputMode="numeric"
                       placeholder="123 321 123"
                       aria-invalid={showError}
+                      aria-describedby={showError && fieldState.error ? errorId : undefined}
                       className="focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
                     />
                     {showError && fieldState.error && (
-                      <p className="text-sm font-medium text-red-500">
+                      <p id={errorId} className="text-sm font-medium text-red-500">
                         {fieldState.error.message}
                       </p>
                     )}

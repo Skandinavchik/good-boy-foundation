@@ -96,6 +96,7 @@ export const DonationForm: FC = () => {
           <Stepper
             items={items}
             current={currentStep}
+            attemptedSteps={attemptedSteps}
             onStepChange={step => {
               void handleStepChange(step)
             }}

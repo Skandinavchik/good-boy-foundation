@@ -111,6 +111,7 @@ export const StepConfirmation: FC<StepConfirmationProps> = ({
                   fieldState.isDirty ||
                   stepAttempted ||
                   formState.isSubmitted)
+              const errorId = 'consentAgreed-error'
 
               return (
                 <div className="space-y-2">
@@ -122,6 +123,7 @@ export const StepConfirmation: FC<StepConfirmationProps> = ({
                         field.onChange(Boolean(checked))
                       }}
                       aria-invalid={showError ? true : undefined}
+                      aria-describedby={showError && fieldState.error ? errorId : undefined}
                       className="size-5 rounded border-neutral-300 data-checked:border-indigo-600 data-checked:bg-indigo-600 focus-visible:border-indigo-600 focus-visible:ring-indigo-600/50"
                     />
                     <Label
@@ -133,7 +135,7 @@ export const StepConfirmation: FC<StepConfirmationProps> = ({
                   </div>
 
                   {showError && fieldState.error && (
-                    <p className="text-sm font-medium text-red-500">
+                    <p id={errorId} className="text-sm font-medium text-red-500">
                       {fieldState.error.message}
                     </p>
                   )}

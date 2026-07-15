@@ -84,10 +84,11 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                   fieldState.isDirty ||
                   stepAttempted ||
                   formState.isSubmitted)
+              const errorId = 'shelterID-error'
               return (
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <label className="block text-sm font-semibold text-neutral-900">
+                    <label htmlFor="shelterID" className="block text-sm font-semibold text-neutral-900">
                       Shelter{' '}
                       <span className="font-normal text-neutral-400">
                         ({helpType === 'shelter' ? 'Required' : 'Optional'})
@@ -119,6 +120,9 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                     disabled={isPending}
                   >
                     <SelectTrigger
+                      id="shelterID"
+                      aria-invalid={showError}
+                      aria-describedby={showError && fieldState.error ? errorId : undefined}
                       className={cn(
                         'w-full',
                         showError && 'border-red-500 focus:ring-red-500',
@@ -137,7 +141,7 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                     </SelectContent>
                   </Select>
                   {showError && fieldState.error && (
-                    <p className="text-sm font-medium text-red-500">
+                    <p id={errorId} className="text-sm font-medium text-red-500">
                       {fieldState.error.message}
                     </p>
                   )}
@@ -149,7 +153,7 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
       </div>
 
       <div className="space-y-8 sm:space-y-10">
-        <h2 className="text-xl font-bold text-neutral-900">
+        <h2 id="amount-heading" className="text-xl font-bold text-neutral-900">
           Amount you want to contribute
         </h2>
 
@@ -163,6 +167,7 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                 fieldState.isDirty ||
                 stepAttempted ||
                 formState.isSubmitted)
+            const errorId = 'value-error'
 
             const valStr =
               field.value !== undefined && field.value !== null
@@ -186,10 +191,14 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                     )}
                   >
                     <input
+                      id="value"
                       type="text"
                       inputMode="decimal"
                       pattern="[0-9.,]*"
                       placeholder="0"
+                      aria-labelledby="amount-heading"
+                      aria-invalid={showError}
+                      aria-describedby={showError && fieldState.error ? errorId : undefined}
                       value={valStr}
                       onChange={e =>
                         onCustomInputChange(e.target.value, field.onChange)
@@ -205,7 +214,7 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                     </span>
                   </div>
                   {showError && fieldState.error && (
-                    <p className="text-sm font-medium text-red-500 pt-3 text-center">
+                    <p id={errorId} className="text-sm font-medium text-red-500 pt-3 text-center">
                       {fieldState.error.message}
                     </p>
                   )}

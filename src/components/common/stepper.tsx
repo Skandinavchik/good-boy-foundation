@@ -15,6 +15,7 @@ export type StepperProps = {
   items: StepItem[]
   current?: number
   defaultStep?: number
+  attemptedSteps?: Record<number, boolean>
   onStepChange?: (stepIndex: number) => void | Promise<void>
   className?: string
 }
@@ -23,6 +24,7 @@ export const Stepper: FC<StepperProps> = ({
   items,
   current,
   defaultStep = 0,
+  attemptedSteps,
   onStepChange,
   className,
 }) => {
@@ -45,8 +47,9 @@ export const Stepper: FC<StepperProps> = ({
         <nav aria-label="Progress" className="w-full">
           <ol className="flex items-center justify-between gap-2 sm:gap-4">
             {items.map((item, index) => {
-              const isCompleted = index < activeStep
+              const isCompleted = index < activeStep || Boolean(attemptedSteps?.[index])
               const isActive = index === activeStep
+              const isFuture = index > activeStep && !attemptedSteps?.[index]
               const isLast = index === items.length - 1
               const stepTitle = item.title ?? null
 
@@ -63,8 +66,18 @@ export const Stepper: FC<StepperProps> = ({
                     variant="ghost"
                     onClick={() => handleStepChange(index)}
                     aria-current={isActive ? 'step' : undefined}
-                    className="group flex h-auto cursor-pointer items-center gap-2.5 p-0 text-left hover:bg-transparent"
+                    className={cn(
+                      'group flex h-auto cursor-pointer items-center gap-2.5 p-0 text-left hover:bg-transparent',
+                      isFuture && 'opacity-60 cursor-not-allowed',
+                    )}
                   >
+                    <span className="sr-only">
+                      {isActive
+                        ? 'Current step: '
+                        : isCompleted
+                          ? 'Completed step: '
+                          : 'Upcoming step: '}
+                    </span>
                     <span
                       className={cn(
                         'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors',
@@ -75,7 +88,7 @@ export const Stepper: FC<StepperProps> = ({
                             : 'border border-neutral-200 bg-neutral-100 text-neutral-400',
                       )}
                     >
-                      {isCompleted ? (
+                      {isCompleted && !isActive ? (
                         <FontAwesomeIcon icon={faCheck} className="h-3 w-3" />
                       ) : (
                         index + 1
