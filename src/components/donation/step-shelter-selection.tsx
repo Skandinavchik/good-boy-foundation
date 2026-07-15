@@ -74,13 +74,6 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
         <h2 className="text-xl font-bold text-neutral-900">About project</h2>
 
         <div className="space-y-1.5">
-          <label className="block text-sm font-semibold text-neutral-900">
-            Shelter{' '}
-            <span className="font-normal text-neutral-400">
-              ({helpType === 'shelter' ? 'Required' : 'Optional'})
-            </span>
-          </label>
-
           <Controller
             name="shelterID"
             control={control}
@@ -93,6 +86,23 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                   formState.isSubmitted)
               return (
                 <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-semibold text-neutral-900">
+                      Shelter{' '}
+                      <span className="font-normal text-neutral-400">
+                        ({helpType === 'shelter' ? 'Required' : 'Optional'})
+                      </span>
+                    </label>
+                    {field.value !== undefined && field.value !== null && (
+                      <button
+                        type="button"
+                        onClick={() => field.onChange(undefined)}
+                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+                      >
+                        Clear selection
+                      </button>
+                    )}
+                  </div>
                   <Select
                     items={shelters.map(s => ({
                       value: s.id.toString(),
@@ -106,7 +116,7 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                     onValueChange={val =>
                       onShelterChange(val, field.onChange)
                     }
-                    disabled={helpType !== 'shelter' || isPending}
+                    disabled={isPending}
                   >
                     <SelectTrigger
                       className={cn(
@@ -153,12 +163,25 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                 fieldState.isDirty ||
                 stepAttempted ||
                 formState.isSubmitted)
+
+            const valStr =
+              field.value !== undefined && field.value !== null
+                ? field.value.toString()
+                : ''
+            const charLength = Math.max(valStr.length, 1)
+            const fontSizeClass =
+              charLength > 6
+                ? 'text-3xl sm:text-4xl'
+                : charLength > 4
+                  ? 'text-4xl sm:text-5xl'
+                  : 'text-5xl sm:text-6xl'
+
             return (
               <div className="space-y-10">
                 <div className="flex flex-col items-center justify-center pt-4 pb-6">
                   <div
                     className={cn(
-                      'relative inline-flex items-baseline justify-center border-b-2 pb-3 px-6 min-w-40',
+                      'relative inline-flex items-baseline justify-center border-b-2 pb-3 px-6 min-w-40 max-w-full overflow-hidden transition-colors',
                       showError ? 'border-red-500' : 'border-indigo-600',
                     )}
                   >
@@ -167,15 +190,15 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                       inputMode="decimal"
                       pattern="[0-9.,]*"
                       placeholder="0"
-                      value={
-                        field.value !== undefined && field.value !== null
-                          ? field.value.toString()
-                          : ''
-                      }
+                      value={valStr}
                       onChange={e =>
                         onCustomInputChange(e.target.value, field.onChange)
                       }
-                      className="w-28 sm:w-36 bg-transparent text-center text-5xl sm:text-6xl font-bold tracking-tight text-neutral-900 outline-none placeholder:text-neutral-400"
+                      style={{ width: `${Math.max(charLength * 0.75, 2)}ch` }}
+                      className={cn(
+                        'bg-transparent text-center font-bold tracking-tight text-neutral-900 outline-none placeholder:text-neutral-400 max-w-full transition-all',
+                        fontSizeClass,
+                      )}
                     />
                     <span className="ml-1 text-2xl sm:text-3xl font-bold text-neutral-900">
                       €

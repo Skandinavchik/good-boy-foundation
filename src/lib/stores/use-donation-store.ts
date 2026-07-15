@@ -10,6 +10,7 @@ export interface DonationStoreState {
   draftFormData: Partial<DonationFormData>
   isSubmitting: boolean
   isSubmittedSuccess: boolean
+  hasHydrated: boolean
 }
 
 export interface DonationStoreActions {
@@ -18,6 +19,7 @@ export interface DonationStoreActions {
   updateDraftFormData: (data: Partial<DonationFormData>) => void
   setIsSubmitting: (submitting: boolean) => void
   setIsSubmittedSuccess: (success: boolean) => void
+  setHasHydrated: (hydrated: boolean) => void
   resetStore: () => void
 }
 
@@ -41,6 +43,7 @@ const initialState: DonationStoreState = {
   draftFormData: initialDraftFormData,
   isSubmitting: false,
   isSubmittedSuccess: false,
+  hasHydrated: false,
 }
 
 export const useDonationStore = create<DonationStore>()(
@@ -62,6 +65,7 @@ export const useDonationStore = create<DonationStore>()(
         })),
       setIsSubmitting: submitting => set({ isSubmitting: submitting }),
       setIsSubmittedSuccess: success => set({ isSubmittedSuccess: success }),
+      setHasHydrated: hydrated => set({ hasHydrated: hydrated }),
       resetStore: () =>
         set({
           currentStep: 0,
@@ -69,6 +73,7 @@ export const useDonationStore = create<DonationStore>()(
           draftFormData: initialDraftFormData,
           isSubmitting: false,
           isSubmittedSuccess: false,
+          hasHydrated: true,
         }),
     }),
     {
@@ -78,6 +83,11 @@ export const useDonationStore = create<DonationStore>()(
         attemptedSteps: state.attemptedSteps,
         draftFormData: state.draftFormData,
       }),
+      onRehydrateStorage: () => state => {
+        if (state) {
+          state.setHasHydrated(true)
+        }
+      },
     },
   ),
 )

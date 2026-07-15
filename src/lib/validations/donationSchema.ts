@@ -45,8 +45,20 @@ export const donationFormSchema = z
     phonePrefix: z.enum(['+421', '+420']),
     phoneNumber: z
       .string()
-      .min(9, 'Phone number must contain at least 9 digits')
-      .regex(/^[0-9\s]+$/, 'Phone number must contain digits only'),
+      .superRefine((val, ctx) => {
+        const digitsOnly = val.replace(/\D/g, '')
+        if (digitsOnly.length < 9) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Phone number must contain at least 9 digits',
+          })
+        } else if (digitsOnly.length > 12) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Phone number must contain at most 12 digits',
+          })
+        }
+      }),
     consentAgreed: z.boolean().refine(val => val === true, {
       message: 'You must agree with the processing of your personal data',
     }),
@@ -83,17 +95,22 @@ export const toApiPayload = (data: DonationFormData): ApiDonationPayload => {
       : data.value
   const cleanVal = isNaN(rawVal) ? 0 : Math.round(rawVal * 100) / 100
 
+  const cleanPhoneDigits = data.phoneNumber.replace(/\D/g, '')
+  const formattedPhoneDigits =
+    cleanPhoneDigits.length === 9
+      ? cleanPhoneDigits.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')
+      : data.phoneNumber.trim()
+
   return {
     contributors: [
       {
         firstName: data.firstName?.trim() || 'Anonym',
         lastName: data.lastName.trim(),
         email: data.email.trim(),
-        phone: `${data.phonePrefix} ${data.phoneNumber.trim()}`.trim(),
+        phone: `${data.phonePrefix} ${formattedPhoneDigits}`.trim(),
       },
     ],
-    ...(data.helpType === 'shelter' &&
-    data.shelterID !== undefined &&
+    ...(data.shelterID !== undefined &&
     data.shelterID !== null &&
     data.shelterID > 0
       ? { shelterID: data.shelterID }

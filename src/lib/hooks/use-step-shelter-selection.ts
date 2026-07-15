@@ -16,7 +16,7 @@ export const useStepShelterSelection = () => {
     data: shelters = [],
     isPending,
     isError,
-  } = useShelters(helpType === 'shelter')
+  } = useShelters(true)
 
   const onHelpTypeChange = (
     val: string[] | string,
@@ -27,7 +27,6 @@ export const useStepShelterSelection = () => {
       onChange(selected)
       if (selected === 'foundation') {
         setValue('helpType', 'foundation')
-        setValue('shelterID', undefined)
         clearErrors('shelterID')
       } else {
         setValue('helpType', 'shelter')
@@ -36,9 +35,9 @@ export const useStepShelterSelection = () => {
   }
 
   const getSelectPlaceholder = () => {
-    if (helpType !== 'shelter') return 'Select shelter from the list'
     if (isPending) return 'Loading shelters...'
     if (isError) return 'Error loading shelters'
+    if (helpType !== 'shelter') return 'Select shelter (Optional)'
     return 'Select shelter from the list'
   }
 

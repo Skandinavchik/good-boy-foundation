@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -25,6 +25,7 @@ export const useDonationForm = (itemsLength: number) => {
   const isSubmittedSuccess = useDonationStore(
     state => state.isSubmittedSuccess,
   )
+  const hasHydrated = useDonationStore(state => state.hasHydrated)
   const setCurrentStep = useDonationStore(state => state.setCurrentStep)
   const setAttemptedStep = useDonationStore(state => state.setAttemptedStep)
   const updateDraftFormData = useDonationStore(
@@ -35,6 +36,7 @@ export const useDonationForm = (itemsLength: number) => {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const hydrationSyncedRef = useRef(false)
   const contributeMutation = useContribute()
 
   const methods = useForm<DonationFormData>({
@@ -47,9 +49,20 @@ export const useDonationForm = (itemsLength: number) => {
   const watchedValues = useWatch({ control: methods.control })
 
   useEffect(() => {
-    if (watchedValues) {
-      updateDraftFormData(watchedValues as Partial<DonationFormData>)
+    if (hasHydrated && !hydrationSyncedRef.current) {
+      hydrationSyncedRef.current = true
+      methods.reset(draftFormData as DonationFormData)
     }
+  }, [hasHydrated, draftFormData, methods])
+
+  useEffect(() => {
+    if (!watchedValues || !hydrationSyncedRef.current) return
+
+    const timer = setTimeout(() => {
+      updateDraftFormData(watchedValues as Partial<DonationFormData>)
+    }, 400)
+
+    return () => clearTimeout(timer)
   }, [watchedValues, updateDraftFormData])
 
   const resetForm = () => {
@@ -120,6 +133,7 @@ export const useDonationForm = (itemsLength: number) => {
       const isValid = await methods.trigger(step2Fields)
       if (!isValid) return
     }
+    updateDraftFormData(methods.getValues() as Partial<DonationFormData>)
     if (currentStep < itemsLength - 1) {
       setCurrentStep(currentStep + 1)
     }
@@ -128,6 +142,7 @@ export const useDonationForm = (itemsLength: number) => {
   const handleBack = () => {
     setErrorMessage(null)
     setSuccessMessage(null)
+    updateDraftFormData(methods.getValues() as Partial<DonationFormData>)
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
     }
@@ -149,6 +164,7 @@ export const useDonationForm = (itemsLength: number) => {
         if (!isValidStep1) return
       }
     }
+    updateDraftFormData(methods.getValues() as Partial<DonationFormData>)
     setCurrentStep(targetStep)
   }
 
