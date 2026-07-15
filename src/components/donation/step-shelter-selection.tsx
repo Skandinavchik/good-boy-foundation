@@ -184,9 +184,10 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
             return (
               <div className="space-y-10">
                 <div className="flex flex-col items-center justify-center pt-4 pb-6">
-                  <div
+                  <label
+                    htmlFor="value"
                     className={cn(
-                      'relative inline-flex items-baseline justify-center border-b-2 pb-3 px-6 min-w-40 max-w-full overflow-hidden transition-colors',
+                      'relative inline-flex items-baseline justify-center border-b-2 pb-3 px-8 min-w-64 sm:min-w-80 max-w-full overflow-hidden transition-colors cursor-text',
                       showError ? 'border-red-500' : 'border-indigo-600',
                     )}
                   >
@@ -203,16 +204,16 @@ export const StepShelterSelection: FC<StepShelterSelectionProps> = ({
                       onChange={e =>
                         onCustomInputChange(e.target.value, field.onChange)
                       }
-                      style={{ width: `${Math.max(charLength * 0.75, 2)}ch` }}
+                      style={{ width: `${Math.max(charLength * 0.85, 4)}ch` }}
                       className={cn(
                         'bg-transparent text-center font-bold tracking-tight text-neutral-900 outline-none placeholder:text-neutral-400 max-w-full transition-all',
                         fontSizeClass,
                       )}
                     />
-                    <span className="ml-1 text-2xl sm:text-3xl font-bold text-neutral-900">
+                    <span className="ml-2 text-2xl sm:text-3xl font-bold text-neutral-900 select-none">
                       €
                     </span>
-                  </div>
+                  </label>
                   {showError && fieldState.error && (
                     <p id={errorId} className="text-sm font-medium text-red-500 pt-3 text-center">
                       {fieldState.error.message}

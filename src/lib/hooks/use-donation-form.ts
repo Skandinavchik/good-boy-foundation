@@ -30,8 +30,7 @@ export const useDonationForm = (itemsLength: number) => {
     setAttemptedStep,
     updateDraftFormData,
     setIsSubmitting,
-    setIsSubmittedSuccess,
-    setLastSubmittedDonation,
+    submitStoreSuccess,
     resetStore,
   } = useDonationStore(state => state)
 
@@ -57,14 +56,14 @@ export const useDonationForm = (itemsLength: number) => {
   }, [hasHydrated, draftFormData, methods])
 
   useEffect(() => {
-    if (!watchedValues || !hydrationSyncedRef.current) return
+    if (!watchedValues || !hydrationSyncedRef.current || isSubmittedSuccess) return
 
     const timer = setTimeout(() => {
       updateDraftFormData(watchedValues as Partial<DonationFormData>)
     }, 400)
 
     return () => clearTimeout(timer)
-  }, [watchedValues, updateDraftFormData])
+  }, [watchedValues, updateDraftFormData, isSubmittedSuccess])
 
   const resetForm = () => {
     setErrorMessage(null)
@@ -98,8 +97,8 @@ export const useDonationForm = (itemsLength: number) => {
         : rawSuccessMsg
 
       const submittedData = methods.getValues()
-      setLastSubmittedDonation(submittedData as DonationFormData)
-      setIsSubmittedSuccess(true)
+      submitStoreSuccess(submittedData as DonationFormData)
+      methods.reset(initialDraftFormData as DonationFormData)
       setSuccessMessage(successMsg)
     } catch (error) {
       console.error('Error submitting form:', error)
