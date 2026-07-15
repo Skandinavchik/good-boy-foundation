@@ -22,8 +22,9 @@ export const DonationForm: FC = () => {
     handleStepChange,
     onSubmit,
     isSubmitting,
-    isSubmittedSuccess,
-    resetForm,
+    errorMessage,
+    successMessage,
+    setSuccessMessage,
   } = useDonationForm(3)
 
   const items: StepItem[] = [
@@ -41,95 +42,147 @@ export const DonationForm: FC = () => {
     },
   ]
 
-  if (isSubmittedSuccess) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center space-y-6 py-12 text-center sm:py-16">
-        <div className="flex size-16 items-center justify-center rounded-full bg-green-100 text-green-600">
-          <svg
-            className="size-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        </div>
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-            Thank you for your support!
-          </h1>
-          <p className="max-w-md text-base text-neutral-600">
-            We have successfully received your donation details. Your help
-            makes a wonderful difference for shelter dogs.
-          </p>
-        </div>
-        <div className="pt-4">
-          <Button
-            type="button"
-            onClick={resetForm}
-            className="inline-flex h-12 items-center rounded-xl bg-indigo-600 px-8 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
-          >
-            Start new donation
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-1 flex-col justify-between gap-12"
       >
-        <Stepper
-          items={items}
-          current={currentStep}
-          onStepChange={step => {
-            void handleStepChange(step)
-          }}
-        />
+        <div className="space-y-6">
+          {successMessage && (
+            <div className="flex items-start justify-between gap-3 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800 shadow-sm transition-all">
+              <div className="flex items-start gap-3">
+                <svg
+                  className="mt-0.5 size-5 shrink-0 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <p className="font-semibold text-green-900">Success</p>
+                  <p className="mt-0.5 text-green-700">{successMessage}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSuccessMessage?.(null)}
+                className="rounded-lg p-1 text-green-600 transition-colors hover:bg-green-100 hover:text-green-800"
+                aria-label="Close"
+              >
+                <svg
+                  className="size-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
 
-        <div className="flex items-center justify-between pt-6">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleBack}
-            disabled={currentStep === 0 || isSubmitting}
-            className="inline-flex h-12 items-center gap-2 rounded-xl bg-neutral-100 px-6 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-40"
-          >
-            <FontAwesomeIcon icon={faArrowLeft} className="h-3.5 w-3.5" />
-            <span>Back</span>
-          </Button>
+          <Stepper
+            items={items}
+            current={currentStep}
+            onStepChange={step => {
+              void handleStepChange(step)
+            }}
+          />
+        </div>
 
-          <Button
-            type="button"
-            disabled={isSubmitting}
-            onClick={
-              isLastStep
-                ? methods.handleSubmit(onSubmit)
-                : () => {
-                  void handleNext()
-                }
-            }
-            className="inline-flex h-12 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-40"
-          >
-            <span>
-              {isSubmitting
-                ? 'Submitting...'
-                : isLastStep
-                  ? 'Submit form'
-                  : 'Continue'}
-            </span>
-            {!isLastStep && !isSubmitting && (
-              <FontAwesomeIcon icon={faArrowRight} className="h-3.5 w-3.5" />
-            )}
-          </Button>
+        <div className="space-y-4 pt-6">
+          {errorMessage && (
+            <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+              <svg
+                className="mt-0.5 size-5 shrink-0 text-red-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div>
+                <p className="font-semibold text-red-900">Submission Error</p>
+                <p className="mt-0.5 text-red-700">{errorMessage}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleBack}
+              disabled={currentStep === 0 || isSubmitting}
+              className="inline-flex h-12 items-center gap-2 rounded-xl bg-neutral-100 px-6 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-40"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} className="h-3.5 w-3.5" />
+              <span>Back</span>
+            </Button>
+
+            <Button
+              type="button"
+              disabled={isSubmitting}
+              onClick={
+                isLastStep
+                  ? methods.handleSubmit(onSubmit)
+                  : () => {
+                    void handleNext()
+                  }
+              }
+              className="inline-flex h-12 items-center gap-2.5 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60"
+            >
+              {isSubmitting && (
+                <svg
+                  className="size-4 animate-spin text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              )}
+              <span>
+                {isSubmitting
+                  ? 'Submitting...'
+                  : isLastStep
+                    ? 'Submit form'
+                    : 'Continue'}
+              </span>
+              {!isLastStep && !isSubmitting && (
+                <FontAwesomeIcon icon={faArrowRight} className="h-3.5 w-3.5" />
+              )}
+            </Button>
+          </div>
         </div>
       </form>
     </FormProvider>

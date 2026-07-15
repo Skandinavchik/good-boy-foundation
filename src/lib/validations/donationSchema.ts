@@ -86,7 +86,7 @@ export const toApiPayload = (data: DonationFormData): ApiDonationPayload => {
   return {
     contributors: [
       {
-        firstName: data.firstName?.trim() || '',
+        firstName: data.firstName?.trim() || 'Anonym',
         lastName: data.lastName.trim(),
         email: data.email.trim(),
         phone: `${data.phonePrefix} ${data.phoneNumber.trim()}`.trim(),

@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { BackButton } from '@/components/common/back-button'
 import { Footer } from '@/components/layout/footer'
+import { AboutStats } from '@/components/about/about-stats'
 
 const AboutPage: FC = () => {
   return (
@@ -21,26 +22,7 @@ const AboutPage: FC = () => {
           through educational and community programs.
         </p>
 
-        <div className="my-10 border-y border-neutral-200 py-10">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 text-center">
-            <div>
-              <div className="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">
-                12 200 €
-              </div>
-              <div className="mt-2 text-sm font-medium text-neutral-700">
-                Total amount raised
-              </div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">
-                1 028
-              </div>
-              <div className="mt-2 text-sm font-medium text-neutral-700">
-                Number of donors
-              </div>
-            </div>
-          </div>
-        </div>
+        <AboutStats />
 
         <p className="mb-12 text-base leading-7 text-neutral-700">
           Our work is made possible by the support of passionate volunteers, generous donors, and

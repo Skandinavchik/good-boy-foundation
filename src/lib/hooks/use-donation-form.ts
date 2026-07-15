@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -12,12 +12,16 @@ import {
   useDonationStore,
   initialDraftFormData,
 } from '@/lib/stores/use-donation-store'
+import {
+  useContribute,
+  extractContributionErrorMessage,
+} from '@/lib/hooks/use-contribute'
 
 export const useDonationForm = (itemsLength: number) => {
   const currentStep = useDonationStore(state => state.currentStep)
   const attemptedSteps = useDonationStore(state => state.attemptedSteps)
   const draftFormData = useDonationStore(state => state.draftFormData)
-  const isSubmitting = useDonationStore(state => state.isSubmitting)
+  const isSubmittingStore = useDonationStore(state => state.isSubmitting)
   const isSubmittedSuccess = useDonationStore(
     state => state.isSubmittedSuccess,
   )
@@ -27,10 +31,11 @@ export const useDonationForm = (itemsLength: number) => {
     state => state.updateDraftFormData,
   )
   const setIsSubmitting = useDonationStore(state => state.setIsSubmitting)
-  const setIsSubmittedSuccess = useDonationStore(
-    state => state.setIsSubmittedSuccess,
-  )
   const resetStore = useDonationStore(state => state.resetStore)
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const contributeMutation = useContribute()
 
   const methods = useForm<DonationFormData>({
     resolver: zodResolver(donationFormSchema),
@@ -47,14 +52,43 @@ export const useDonationForm = (itemsLength: number) => {
     }
   }, [watchedValues, updateDraftFormData])
 
+  const resetForm = () => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
+    resetStore()
+    methods.reset(initialDraftFormData as DonationFormData)
+  }
+
   const onSubmit: SubmitHandler<DonationFormData> = async data => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
     setIsSubmitting(true)
     try {
       const payload = toApiPayload(data)
-      console.info('Form submitted (API Payload):', payload)
-      setIsSubmittedSuccess(true)
+      console.info('Submitting form (API Payload):', payload)
+      const res = await contributeMutation.mutateAsync(payload)
+      const rawSuccessMsg =
+        res.messages?.find(m => m.type === 'SUCCESS')?.message ||
+        res.messages?.[0]?.message ||
+        ''
+
+      const isSlovakOrEmpty =
+        !rawSuccessMsg ||
+        rawSuccessMsg.includes('Príspevok') ||
+        rawSuccessMsg.includes('úspešne') ||
+        rawSuccessMsg.includes('zaznamenaný') ||
+        /[áäčďéíĺľňóôŕšťúýž]/i.test(rawSuccessMsg)
+
+      const successMsg = isSlovakOrEmpty
+        ? 'Thank you for your support! We have successfully received your donation details.'
+        : rawSuccessMsg
+
+      resetForm()
+      setSuccessMessage(successMsg)
     } catch (error) {
       console.error('Error submitting form:', error)
+      const errorMsg = await extractContributionErrorMessage(error)
+      setErrorMessage(errorMsg)
     } finally {
       setIsSubmitting(false)
     }
@@ -76,6 +110,8 @@ export const useDonationForm = (itemsLength: number) => {
   ]
 
   const handleNext = async () => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
     setAttemptedStep(currentStep, true)
     if (currentStep === 0) {
       const isValid = await methods.trigger(step1Fields)
@@ -90,12 +126,16 @@ export const useDonationForm = (itemsLength: number) => {
   }
 
   const handleBack = () => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
     }
   }
 
   const handleStepChange = async (targetStep: number) => {
+    setErrorMessage(null)
+    setSuccessMessage(null)
     if (targetStep > currentStep) {
       if (currentStep === 0) {
         setAttemptedStep(0, true)
@@ -112,10 +152,7 @@ export const useDonationForm = (itemsLength: number) => {
     setCurrentStep(targetStep)
   }
 
-  const resetForm = () => {
-    resetStore()
-    methods.reset(initialDraftFormData as DonationFormData)
-  }
+  const combinedIsSubmitting = isSubmittingStore || contributeMutation.isPending
 
   return {
     methods,
@@ -127,9 +164,13 @@ export const useDonationForm = (itemsLength: number) => {
     handleBack,
     handleStepChange,
     onSubmit,
-    isSubmitting,
+    isSubmitting: combinedIsSubmitting,
     isSubmittedSuccess,
     resetStore,
     resetForm,
+    errorMessage,
+    setErrorMessage,
+    successMessage,
+    setSuccessMessage,
   }
 }
