@@ -21,6 +21,9 @@ export const DonationForm: FC = () => {
     handleBack,
     handleStepChange,
     onSubmit,
+    isSubmitting,
+    isSubmittedSuccess,
+    resetForm,
   } = useDonationForm(3)
 
   const items: StepItem[] = [
@@ -37,6 +40,46 @@ export const DonationForm: FC = () => {
       content: <StepConfirmation stepAttempted={Boolean(attemptedSteps[2])} />,
     },
   ]
+
+  if (isSubmittedSuccess) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center space-y-6 py-12 text-center sm:py-16">
+        <div className="flex size-16 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <svg
+            className="size-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+            Thank you for your support!
+          </h1>
+          <p className="max-w-md text-base text-neutral-600">
+            We have successfully received your donation details. Your help
+            makes a wonderful difference for shelter dogs.
+          </p>
+        </div>
+        <div className="pt-4">
+          <Button
+            type="button"
+            onClick={resetForm}
+            className="inline-flex h-12 items-center rounded-xl bg-indigo-600 px-8 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+          >
+            Start new donation
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <FormProvider {...methods}>
@@ -57,7 +100,7 @@ export const DonationForm: FC = () => {
             type="button"
             variant="secondary"
             onClick={handleBack}
-            disabled={currentStep === 0}
+            disabled={currentStep === 0 || isSubmitting}
             className="inline-flex h-12 items-center gap-2 rounded-xl bg-neutral-100 px-6 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-40"
           >
             <FontAwesomeIcon icon={faArrowLeft} className="h-3.5 w-3.5" />
@@ -66,6 +109,7 @@ export const DonationForm: FC = () => {
 
           <Button
             type="button"
+            disabled={isSubmitting}
             onClick={
               isLastStep
                 ? methods.handleSubmit(onSubmit)
@@ -75,8 +119,14 @@ export const DonationForm: FC = () => {
             }
             className="inline-flex h-12 items-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-40"
           >
-            <span>{isLastStep ? 'Submit form' : 'Continue'}</span>
-            {!isLastStep && (
+            <span>
+              {isSubmitting
+                ? 'Submitting...'
+                : isLastStep
+                  ? 'Submit form'
+                  : 'Continue'}
+            </span>
+            {!isLastStep && !isSubmitting && (
               <FontAwesomeIcon icon={faArrowRight} className="h-3.5 w-3.5" />
             )}
           </Button>
